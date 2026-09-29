@@ -1,9 +1,44 @@
-<!-- BEGIN:nextjs-agent-rules -->
+# AGENTS.md
 
-# This is NOT the Next.js you know
+## Project Overview
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+This project is a Todo List application built with Next.js,
+TypeScript, React, and Tailwind CSS.
 
-This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+## Development Rules
 
-<!-- END:nextjs-agent-rules -->
+- Use TypeScript.
+- Do not use `any` unless absolutely necessary.
+- Use reusable React components.
+- Use Tailwind CSS for styling.
+- Keep components small and focused.
+- Follow the existing project structure.
+- Do not rewrite working code unnecessarily.
+- Keep the UI responsive.
+- Use semantic HTML where appropriate.
+- Keep the code simple and readable.
+
+## Todo Features
+
+The application should support:
+
+- Creating todos
+- Editing todos
+- Completing todos
+- Deleting todos
+- Persisting todos with localStorage
+
+## Before Changing Code
+
+1. Inspect the existing implementation.
+2. Understand how the current feature works.
+3. Make the smallest appropriate change.
+4. Do not break existing functionality.
+
+## Testing
+
+After making changes:
+
+- Run `npm run lint`
+- Run `npm run build`
+- Fix any errors before considering the task complete.

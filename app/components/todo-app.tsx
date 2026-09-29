@@ -1,21 +1,62 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { FilterTabs, type TodoFilter } from "./filter-tabs";
 import { StatCard } from "./stat-card";
 import { TodoForm } from "./todo-form";
 import { TodoList } from "./todo-list";
 import type { Todo } from "./todo-item";
 
+const STORAGE_KEY = "todo-flow-items";
+
+function readStoredTodos(): Todo[] {
+  if (typeof window === "undefined") {
+    return [];
+  }
+
+  const savedTodos = window.localStorage.getItem(STORAGE_KEY);
+
+  if (!savedTodos) {
+    return [];
+  }
+
+  try {
+    const parsedTodos = JSON.parse(savedTodos) as Todo[];
+
+    return Array.isArray(parsedTodos) ? parsedTodos : [];
+  } catch {
+    window.localStorage.removeItem(STORAGE_KEY);
+    return [];
+  }
+}
+
 export function TodoApp() {
-  const [todos, setTodos] = useState<Todo[]>([]);
+  const [todos, setTodos] = useState<Todo[]>(readStoredTodos);
   const [taskInput, setTaskInput] = useState("");
+  const [filter, setFilter] = useState<TodoFilter>("all");
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingText, setEditingText] = useState("");
+
+  useEffect(() => {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
+  }, [todos]);
 
   const completedCount = useMemo(
     () => todos.filter((todo) => todo.completed).length,
     [todos],
   );
+
+  const filteredTodos = useMemo(() => {
+    if (filter === "active") {
+      return todos.filter((todo) => !todo.completed);
+    }
+
+    if (filter === "completed") {
+      return todos.filter((todo) => todo.completed);
+    }
+
+    return todos;
+  }, [filter, todos]);
 
   const addTask = () => {
     const trimmedTask = taskInput.trim();
@@ -104,8 +145,12 @@ export function TodoApp() {
               onSubmit={addTask}
             />
 
+            <div className="flex justify-end">
+              <FilterTabs value={filter} onChange={setFilter} />
+            </div>
+
             <TodoList
-              todos={todos}
+              todos={filteredTodos}
               editingId={editingId}
               editValue={editingText}
               onToggle={toggleTask}
